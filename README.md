@@ -1,71 +1,137 @@
 # Desafio Técnico — Processo Seletivo de Estágio (BZR Group)
 
-Solução em Java para os pontos técnicos do case, organizada em três programas independentes.
+Solução desenvolvida em Java para os pontos técnicos do case, organizada em três programas independentes.
 
-## Estrutura
+## Estrutura do projeto
 
-```
+```text
 desafio-java/
 ├── pom.xml
 └── src/main/
     ├── java/br/com/leticia/desafio/
     │   ├── Programa1.java   (ponto 1)
     │   ├── Programa2.java   (ponto 2)
-    │   └── Programa3.java   (pontos 3, 4, 5 e 6)
+    │   └── Programa3.java   (pontos 3, 4 e 5)
     └── resources/
         ├── test1.json
         ├── test2_text1.txt
         └── test2_text2.txt
 ```
 
-## Ponto 1 — Soma de um array em JSON (`Programa1.java`)
+## Ponto 1 — Soma dos valores do JSON
 
-Lê o arquivo `test1.json`, que contém um array com números representados tanto como inteiros quanto como texto (ex.: `[1, "2", 3, "4"]`), e soma todos os valores.
+O `Programa1.java` realiza a leitura do arquivo `test1.json`, que contém um array com valores numéricos representados tanto como números quanto como textos, como no exemplo:
 
-- Usa a biblioteca **Jackson** (`jackson-databind`) para parsear o JSON.
-- Para cada elemento do array, verifica o tipo: se for numérico, soma diretamente; se for texto, converte para inteiro antes de somar.
-- Lê o arquivo via `getResourceAsStream`, o que o torna independente do diretório de onde o programa é executado.
+```json
+[1, "2", 3, "4"]
+```
 
-**Saída esperada:** `Soma total: 10`
+Para realizar a leitura e interpretação do JSON, foi utilizada a biblioteca Jackson (`jackson-databind`).
 
-## Ponto 2 — Comparação de arquivos (`Programa2.java`)
+O programa percorre cada elemento do array e verifica seu tipo:
 
-Lê os arquivos `test2_text1.txt` e `test2_text2.txt` e verifica se possuem o mesmo conteúdo.
+* valores numéricos são convertidos diretamente para inteiro;
+* valores textuais são convertidos para inteiro utilizando `Integer.parseInt()`.
 
-- Carrega os dois arquivos como `String` (UTF-8) e compara com `.equals()`.
-- Os arquivos são visualmente quase idênticos, mas diferem no último caractere (um caractere especial diferente ao final de cada um), então a comparação corretamente retorna `false`.
+Após o processamento, os valores são somados.
 
-**Saída esperada:** `Os arquivos possuem os mesmos caracteres? false`
+**Resultado obtido:**
 
-> Observação: o programa lê os arquivos por caminho relativo (`src/main/resources/...`), então precisa ser executado a partir da raiz do projeto.
+```text
+Soma total: 10
+```
 
-## Pontos 3 a 6 — Diferença em dias entre 15/02 e 15/10 (`Programa3.java`)
+## Ponto 2 — Comparação dos arquivos
 
-Calcula quantos dias há entre 15 de fevereiro e 15 de outubro nos anos **2000**, **2001**, **1900** e **1582**, usando `java.time.LocalDate` e `ChronoUnit.DAYS`.
+O `Programa2.java` realiza a leitura dos arquivos `test2_text1.txt` e `test2_text2.txt` utilizando UTF-8.
 
-| Ano  | Dias | Motivo |
-|------|------|--------|
-| 2000 | 243  | Ano bissexto — divisível por 400 (regra especial dos anos de virada de século) |
-| 2001 | 242  | Ano comum |
-| 1900 | 242  | **Não** é bissexto — divisível por 100, mas não por 400 |
-| 1582 | 232  | Ano da reforma do calendário Gregoriano — ver observação abaixo |
+Após a leitura, os conteúdos são armazenados como `String` e comparados utilizando o método `.equals()`.
 
-### Sobre o ano de 1582
+Como existe uma diferença entre os caracteres presentes nos arquivos, a comparação retorna `false`.
 
-`LocalDate` usa o calendário Gregoriano *proléptico*, ou seja, trata como se o calendário Gregoriano sempre tivesse existido — o que não é historicamente correto para 1582. Nesse ano, o Papa Gregório XIII implementou a reforma do calendário: a quinta-feira **4 de outubro** (calendário Juliano) foi seguida diretamente pela sexta-feira **15 de outubro** (calendário Gregoriano), eliminando **10 dias** que nunca existiram.
+**Resultado obtido:**
 
-Por isso, o cálculo puro do `LocalDate` (242 dias) foi ajustado subtraindo esses 10 dias, resultando no valor histórico correto de **232 dias**.
+```text
+Os arquivos possuem os mesmos caracteres? false
+```
+
+## Pontos 3, 4, 5 e 6 — Diferença entre datas
+
+O `Programa3.java` calcula a quantidade de dias entre 15 de fevereiro e 15 de outubro dos anos solicitados no case.
+
+Para isso, foram utilizadas as classes `LocalDate` e `ChronoUnit.DAYS`, da API de datas do Java.
+
+| Ano  | Dias |
+| ---- | ---- |
+| 2000 | 243  |
+| 2001 | 242  |
+| 1900 | 242  |
+| 1582 | 232  |
+
+Os resultados são calculados utilizando:
+
+```java
+ChronoUnit.DAYS.between(dataInicial, dataFinal)
+```
+
+O uso de `LocalDate` permite trabalhar com as regras de calendário sem a necessidade de realizar manualmente os cálculos de quantidade de dias de cada mês.
+
+### Observação sobre o ano de 1582
+
+Para o ano de 1582, foi considerado o contexto histórico da reforma do calendário Gregoriano. Durante a adoção do novo calendário, 10 dias foram suprimidos em determinados locais, com a passagem de 4 de outubro para 15 de outubro.
+
+Como o `LocalDate` utiliza o calendário Gregoriano de forma contínua, o cálculo padrão retorna 242 dias. Para representar a diferença considerando a supressão histórica desses 10 dias, foi realizado o ajuste de 10 dias no resultado, chegando a **232 dias**.
+
+Esse ajuste foi aplicado de forma explícita no código para deixar clara a regra considerada no cálculo.
+
+## Tecnologias utilizadas
+
+* Java
+* Maven
+* Jackson
+* Java Time API
+* Spring Tools Suite (STS)
 
 ## Como executar
 
-Com Maven instalado, a partir da pasta `desafio-java`:
+Os três programas possuem métodos `main` independentes e podem ser executados individualmente pela IDE.
 
-```bash
-mvn compile
-mvn exec:java -Dexec.mainClass="br.com.leticia.desafio.Programa1"
-mvn exec:java -Dexec.mainClass="br.com.leticia.desafio.Programa2"
-mvn exec:java -Dexec.mainClass="br.com.leticia.desafio.Programa3"
+### Programa 1
+
+Executar a classe:
+
+```text
+br.com.leticia.desafio.Programa1
 ```
 
-##Autora
-Leticia Gabrielle Caaudino da Paz
+### Programa 2
+
+Executar a classe:
+
+```text
+br.com.leticia.desafio.Programa2
+```
+
+### Programa 3
+
+Executar a classe:
+
+```text
+br.com.leticia.desafio.Programa3
+```
+
+Os arquivos utilizados pelos programas devem permanecer dentro de:
+
+```text
+src/main/resources/
+```
+
+## Dependência utilizada
+
+O projeto utiliza a biblioteca Jackson para leitura do arquivo JSON.
+
+A dependência está configurada no `pom.xml`.
+
+## Autora
+
+Leticia Gabrielle Claudino da Paz

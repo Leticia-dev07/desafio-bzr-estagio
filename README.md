@@ -67,6 +67,5 @@ mvn exec:java -Dexec.mainClass="br.com.leticia.desafio.Programa2"
 mvn exec:java -Dexec.mainClass="br.com.leticia.desafio.Programa3"
 ```
 
-## Parte 1 do desafio
-
-O formulário do Google indicado no enunciado também foi preenchido e enviado.
+##Autora
+Leticia Gabrielle Caaudino da Paz
